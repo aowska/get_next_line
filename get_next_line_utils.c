@@ -11,31 +11,6 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-
-void	*ft_bzero(void *str, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		((unsigned char *)str)[i] = '\0';
-		i++;
-	}
-	return (str);
-}
-
-void	*ft_calloc(size_t number, size_t size)
-{
-	void	*n;
-
-	n = malloc(number * size);
-	if (n != NULL)
-		ft_memset(n, 0, number * size);
-	return (n);
-}
-/* number - liczba argumentow
-size rozmiar kazdego armunemtu */
 char	*ft_strchr(const char *str, int c)
 {
 	c = (unsigned char)c;
@@ -54,41 +29,6 @@ size_t	ft_strlen(const char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
-
-char	*ft_strcat(char *dest, char const *src)
-{
-	int	a;
-	int	i;
-
-	i = 0;
-	a = 0;
-	while (dest[i] != '\0')
-	{
-		i++;
-	}
-	while (src[a] != '\0')
-	{
-		dest[i] = src[a];
-		a++;
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
-}
-
-char	*ft_strcpy(char *dest, char const *src)
-{
-	int	i;
-
-	i = 0;
-	while (src[i] != '\0')
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
