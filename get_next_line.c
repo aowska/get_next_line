@@ -13,7 +13,7 @@
 
 char    *ft_read(int fd, char *str)
 {
-    size_t nbyte;
+    ssize_t nbyte;
     char *buf;
 
     buf = NULL;
@@ -21,7 +21,7 @@ char    *ft_read(int fd, char *str)
     buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
     if(!buf)
         return (0);
-    while(nbyte != 0 || strchr(buf, '\n') == NULL)
+    while(nbyte != 0 || ft_strchr(buf, '\n') == NULL)
     {
         nbyte = read(fd, buf, BUFFER_SIZE);
         if (nbyte == -1)
@@ -29,7 +29,7 @@ char    *ft_read(int fd, char *str)
 		    free(buf);
 		    return (NULL);
 	    }
-        str = strjoin(str, buf);
+        str = ft_strjoin(str, buf);
         free(buf);
     }
     return(str);
@@ -39,15 +39,15 @@ char    *ft_read(int fd, char *str)
 char    *ft_rests(char *desc)
 {
     size_t i;
-    char *rest
+    char *rest;
 
     i = 0;
     rest = 0;
-    i = ft_strlen(strchr(desc, '\n'));
-    rest= (char *)malloc((i) * sizeof(char));
+    i = ft_strlen(ft_strchr(desc, '\n'));
+    rest = (char *)malloc((i) * sizeof(char));
     if(!rest)
         return(NULL);
-    rest = strchr(str, '\n');
+    rest = ft_strchr(desc, '\n');
     rest++;
     return (rest);
 }
@@ -64,7 +64,7 @@ char *ft_line(char *l, char *s)
     int	i;
 
 	i = 0;
-	while (src[i] != '\n')
+	while (l[i] != '\n')
 	{
 		s[i] = l[i];
 		i++;
@@ -75,12 +75,12 @@ char *ft_line(char *l, char *s)
 
 char *get_next_line(int fd)
 {
-    static char *line[10000];
-    char * str[10000];
+    static char *line;
+    char * str;
     int i;
     
     i = 0;
-    str = NULL;
+    str = 0;
     // srawdzamy czy wartosc fd poprawna lub podany buffer jest poprawny 
     if ((fd < 0) || BUFFER_SIZE <= 0)
         return (0);

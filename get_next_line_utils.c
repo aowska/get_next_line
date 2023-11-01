@@ -31,6 +31,40 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
+char	*ft_strcpy(char *dest, char const *src)
+{
+	int	i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+char	*ft_strcat(char *dest, char const *src)
+{
+	int	a;
+	int	i;
+
+	i = 0;
+	a = 0;
+	while (dest[i] != '\0')
+	{
+		i++;
+	}
+	while (src[a] != '\0')
+	{
+		dest[i] = src[a];
+		a++;
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ptr;
