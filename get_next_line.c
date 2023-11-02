@@ -14,7 +14,7 @@
 char    *ft_read(int fd, char *str)
 {
     ssize_t nbyte;
-    char *buf;
+    char    *buf;
 
     buf = NULL;
     nbyte = 1;
@@ -35,41 +35,41 @@ char    *ft_read(int fd, char *str)
     return(str);
 }
 
-
 char    *ft_rests(char *desc)
 {
-    size_t i;
-    char *rest;
+    size_t  i;
+    char    *rest;
 
     i = 0;
     rest = 0;
     i = ft_strlen(ft_strchr(desc, '\n'));
+    // if eol == \0 return NULL
+	if (!desc[i])
+	{
+		free(desc);
+		return (NULL);
+	}
     rest = (char *)malloc((i) * sizeof(char));
     if(!rest)
         return(NULL);
-    rest = ft_strchr(desc, '\n');
+    ft_strcpy(rest, ft_strchr(desc, '\n'));
     rest++;
     return (rest);
 }
 
 char *ft_line(char *l, char *s)
 {
-    //size_t i;
-    //size_t j;
-
-    //i = 0;
-    //j = 0; 
-    //i = ft_strlen(strchr(l, '\n') - l) + 2;
-    //s = (char *)malloc((i) * sizeof(char));
-    int	i;
+    int i;
 
 	i = 0;
-	while (l[i] != '\n')
+	while (l[i] && l[i] != '\n')
 	{
 		s[i] = l[i];
 		i++;
 	}
-	s[i] = '\0';
+    // if eol is \0 or \n, replace eol by \n
+	if (l[i] && l[i] == '\n')
+		s[i++] = '\n';
 	return (s);
 }
 
@@ -90,7 +90,7 @@ char *get_next_line(int fd)
     // find len of first line
 	while (line[i] && line[i] != '\n')
 		i++;
-    str = (char *)malloc((i) * sizeof(char));
+    str = (char *)malloc((i + 2) * sizeof(char));
     str = ft_line(line, str);
     line = ft_rests(line);
     return(str);
