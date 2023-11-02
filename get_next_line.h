@@ -16,8 +16,10 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <stdio.h>
+# include <fcntl.h>
 
-//# define BUFFER_SIZE 100
+# define BUFFER_SIZE 100
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *string, int i);
