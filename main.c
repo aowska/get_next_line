@@ -7,15 +7,18 @@ int main(void)
 	char	*temp;
 	int	fd;
 
-	fd = open("1.txt", O_RDONLY);
+	fd = open("7.rtf", O_RDONLY);
 
-	while(1)
+	int i = 0;
+	while(i++ < 10)
 	{
 		temp = get_next_line(fd);
 		if (!temp)
-		break ;
+			break ;
 		printf("%s", temp);
-		free(temp);
+		fflush(0);
+		//free(temp);
 	}
+	close(fd);
 	return (0);
 }

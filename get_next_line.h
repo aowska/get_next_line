@@ -19,7 +19,9 @@
 # include <stdio.h>
 # include <fcntl.h>
 
-# define BUFFER_SIZE 100
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 5
+# endif
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *string, int i);
