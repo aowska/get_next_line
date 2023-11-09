@@ -9,8 +9,8 @@
 /*   Updated: 2023/08/02 21:09:54 by awacowsk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <stdarg.h>
 # include <unistd.h>

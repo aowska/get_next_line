@@ -44,6 +44,7 @@ char	*ft_strcpy(char *dest, char const *src)
 	dest[i] = '\0';
 	return (dest);
 }
+
 char	*ft_strcat(char *dest, char const *src)
 {
 	int	a;
@@ -70,7 +71,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*ptr;
 
 	ptr = (char *)malloc ((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (ptr == NULL)
+	if (!ptr)
 		return (NULL);
 	if (s1 && s2)
 		return (ft_strcat(ft_strcpy(ptr, s1), s2));
@@ -82,4 +83,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	return (ptr);
 }
-

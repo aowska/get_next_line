@@ -11,135 +11,102 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-char   *ft_read(int fd, char *str)
+char	*ft_read(int fd, char *str)
 {
-    ssize_t nbyte;
-    char    *buf;
+	ssize_t	nbyte;
+	char	*buf;
 
-    buf = NULL;
-    nbyte = 1;
-    if(!str)
-        str = (char *)malloc(1 * 1);
-    buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char)); // mallocuje piersze spotkane miejsce wiec kurwa nie zwalniaj czegos czego nie mozesz !!!
-    //printf("str: %lld, buf : %lld\n", (long long)str, (long long)buf);
-    if(!buf)
-    {
-        free(buf);
-        return (0);
-    }
-    while(nbyte > 0 )
-    {
-        buf[0] = 0;
-        // printf("str: %lld, buf : %lld\n", (long long)str, (long long)buf);
-      //  printf("str: %s\n", str);
-      //  fflush(0);
-        nbyte = read(fd, buf, BUFFER_SIZE);
-      //  printf("str2: %s\n", str);
-      //  fflush(0);
-        if (nbyte == -1)
-	    {
-		    free(buf);
-            free(str);
-		    return (NULL);
-        }
-        buf[nbyte] = '\0';
-     //   printf("nbyte: %zd\n", nbyte);
-    //    printf("buf: %s\n", buf);
-     //   fflush(0);
-      //  if (nbyte == 0 || !buf[0])
-        //    return (printf("test"), str);
-	   // if(buf[0]== '\0')
-        //    break;
-        str = ft_strjoin(str, buf);
-        if(ft_strchr(str, '\n'))
-            break ;
-    }
-   free(buf);
-   // printf("%s\n", str);
-    return(str);
+	buf = NULL;
+	nbyte = 1;
+	if (!str)
+		str = (char *)malloc(1 * 1);
+	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buf)
+	{
+		free(buf);
+		return (0);
+	}
+	while (nbyte > 0 && !ft_strchr(str, '\n'))
+	{
+		nbyte = read(fd, buf, BUFFER_SIZE);
+		if (nbyte == -1)
+		{
+			free(buf);
+			return (NULL);
+		}
+		buf[nbyte] = '\0';
+		str = ft_strjoin(str, buf);
+	}
+	free(buf);
+	return (str);
 }
 
-char    *ft_rests(char *desc, int j)
+char	*ft_rests(char *desc)
 {
-   // size_t  i;
-    char    *rest;
+	char	*rest;
+	size_t	i;
 
-    rest = 0;
-    //printf("i: %zi\n", i);
-    // printf("i: %zi\n", i);
-    // if eol == \0 return NULL
+	rest = NULL;
+	i = 0;
+	while (desc[i] && desc[i] != '\n')
+		i++;
 	if (!desc)
 	{
 		free(desc);
 		return (NULL);
 	}
-    rest = (char *)malloc((j) * sizeof(char));
-    if(!rest)
-    {
-        free(desc);
-        return(NULL);
-    }
-    if(ft_strchr(desc, '\n'))
-        ft_strcpy(rest, ft_strchr(desc, '\n')+ 1);
-    else
-        free(rest);
-    //rest++;
-	//printf("%s", rest);
-    free(desc);
-    return (rest);
+	rest = (char *)malloc((ft_strlen(desc) - i + 1) * sizeof(char));
+	if (!rest)
+	{
+		free(desc);
+		return (NULL);
+	}
+	if (ft_strchr(desc, '\n'))
+		ft_strcpy(rest, ft_strchr(desc, '\n') + 1);
+	else
+		rest[i] = '\0';
+	free(desc);
+	return (rest);
 }
 
-char *ft_line(char *l, char *s)
+char	*ft_line(char *l)
 {
-    int i;
+	int		i;
+	char	*s;
 
 	i = 0;
-    if (!l[i])
-        return(NULL);
+	s = NULL; 
+	if (!l[i])
+		return (NULL);
+	while (l[i] && l[i] != '\n')
+		i++;
+	s = (char *)malloc((i + 2) * sizeof(char));
+	if (!s)
+		return (NULL);
+	i = 0;
 	while (l[i] && l[i] != '\n')
 	{
 		s[i] = l[i];
 		i++;
 	}
-    // if eol is \0 or \n, replace eol by \n
-	if (l[i] || l[i] == '\n')
+	if (l[i] == '\n')
 		s[i++] = '\n';
+	s[i] = '\0';
 	return (s);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-    static char *line;
-    char * str;
-    int i;
-    size_t j;
-    
-    i = 0;
-    str = 0;
-    // srawdzamy czy wartosc fd poprawna lub podany buffer jest poprawny 
-    if ((fd < 0) || BUFFER_SIZE <= 0)
-        return (0);
-    //printf("line: %lld\n", (long long)line);
-    line = ft_read(fd, line);
-    if(!line)
-        return (NULL);
-    //ind len of first line
-    //printf("%s\n", line);
-	while (line[i] && line[i] != '\n')
-		i++;
-    str = (char *)malloc((i + 2) * sizeof(char));
-    if(!str)
-    {
-        free(str);
-        return (0);
-    }
-    j = ft_strlen(line) - i; 
-    //str = line;
-    str = ft_line(line, str);
-   // printf("line pre: %s\n", str);
-    line = ft_rests(line, j);
-   // printf("rests: %s\n", line);
-    return(str);
-}
+	static char	*line;
+	char		*str;
 
-//something is worng with this fucking rests function !! 
+	str = NULL;
+	if ((fd < 0) || BUFFER_SIZE <= 0)
+		return (NULL);
+	line = ft_read(fd, line);
+	if (!line)
+		return (NULL);
+	str = ft_line(line);
+	line = ft_rests(line);
+	return (str);
+}
