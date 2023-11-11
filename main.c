@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <fcntl.h>
 #include "get_next_line.h"
@@ -8,10 +9,11 @@ int	main(void)
 	int		fd;
 	int		i;
 
-	fd = open("7.txt", O_RDONLY);
+	fd = open("read_error.txt", O_RDONLY);
 	i = 0;
 	while (i++ < 10)
 	{
+		temp = NULL;
 		temp = get_next_line(fd);
 		if (!temp)
 			break ;

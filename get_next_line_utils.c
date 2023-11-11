@@ -23,7 +23,7 @@ char	*ft_strchr(const char *str, int c)
 
 size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -70,6 +70,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*ptr;
 
+	ptr = NULL;
 	ptr = (char *)malloc ((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
 	if (!ptr)
 		return (NULL);
@@ -80,6 +81,5 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	else if (s1 == NULL && s2 != NULL)
 		return (ft_strcpy(ptr, s2));
 	else
-		return (NULL);
-	return (ptr);
+		return (free(ptr), NULL);
 }

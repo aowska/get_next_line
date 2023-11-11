@@ -29,5 +29,7 @@ size_t	ft_strlen(const char *str);
 char	*ft_strcpy(char *dest, char const *src);
 char	*ft_strcat(char *dest, char const *src);
 char	*ft_strjoin(char const *s1, char const *s2);
+void	*ft_memset(void *str, int c, size_t n);
+void	*ft_calloc(size_t number, size_t size);
 
 #endif

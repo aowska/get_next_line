@@ -15,30 +15,32 @@ char	*ft_read(int fd, char *str)
 {
 	ssize_t	nbyte;
 	char	*buf;
+	char	*temp;
 
 	buf = NULL;
+	temp = NULL;
 	nbyte = 1;
-	if (!str)
+	if (!str) 
+	{
 		str = (char *)malloc(1 * 1);
+		*str = 0;
+	}
 	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buf)
-	{
-		free(buf);
-		return (0);
-	}
+		return (free(str), NULL);
 	while (nbyte > 0 && !ft_strchr(str, '\n'))
 	{
 		nbyte = read(fd, buf, BUFFER_SIZE);
 		if (nbyte == -1)
-		{
-			free(buf);
-			return (NULL);
-		}
+			return (free(buf), free(str), NULL);
 		buf[nbyte] = '\0';
-		str = ft_strjoin(str, buf);
+		temp = ft_strjoin(str, buf);
+		if (!temp)
+			return (free(str), free(buf), NULL);
+		free(str); 
+		str = temp;
 	}
-	free(buf);
-	return (str);
+	return (free(buf), str);
 }
 
 char	*ft_rests(char *desc)
@@ -50,28 +52,19 @@ char	*ft_rests(char *desc)
 	i = 0;
 	while (desc[i] && desc[i] != '\n')
 		i++;
-	if (!desc)
-	{
-		free(desc);
-		return (NULL);
-	}
+	if (!desc[i])
+		return (free(desc), NULL);
 	rest = (char *)malloc((ft_strlen(desc) - i + 1) * sizeof(char));
 	if (!rest)
-	{
-		free(desc);
 		return (NULL);
-	}
 	if (ft_strchr(desc, '\n'))
 		ft_strcpy(rest, ft_strchr(desc, '\n') + 1);
-	else
-		rest[i] = '\0';
-	free(desc);
-	return (rest);
+	return (free(desc), rest);
 }
 
 char	*ft_line(char *l)
 {
-	int		i;
+	size_t	i;
 	char	*s;
 
 	i = 0;
@@ -89,7 +82,7 @@ char	*ft_line(char *l)
 		s[i] = l[i];
 		i++;
 	}
-	if (l[i] == '\n')
+	if (l[i] && l[i] == '\n')
 		s[i++] = '\n';
 	s[i] = '\0';
 	return (s);
@@ -101,7 +94,7 @@ char	*get_next_line(int fd)
 	char		*str;
 
 	str = NULL;
-	if ((fd < 0) || BUFFER_SIZE <= 0)
+	if ((fd < 0) || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	line = ft_read(fd, line);
 	if (!line)
