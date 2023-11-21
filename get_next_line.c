@@ -11,16 +11,27 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
+char	*ft_temp(char *str, char *buf)
+{
+	char	*temp;
+
+	temp = NULL;
+	temp = ft_strjoin(str, buf);
+	if (!temp)
+		return (free(str), NULL);
+	free(str);
+	str = temp;
+	return (str);
+}
+
 char	*ft_read(int fd, char *str)
 {
 	ssize_t	nbyte;
 	char	*buf;
-	char	*temp;
 
 	buf = NULL;
-	temp = NULL;
 	nbyte = 1;
-	if (!str) 
+	if (!str)
 	{
 		str = (char *)malloc(1 * 1);
 		*str = 0;
@@ -34,11 +45,7 @@ char	*ft_read(int fd, char *str)
 		if (nbyte == -1)
 			return (free(buf), free(str), NULL);
 		buf[nbyte] = '\0';
-		temp = ft_strjoin(str, buf);
-		if (!temp)
-			return (free(str), free(buf), NULL);
-		free(str); 
-		str = temp;
+		str = ft_temp(str, buf);
 	}
 	return (free(buf), str);
 }
@@ -56,7 +63,7 @@ char	*ft_rests(char *desc)
 		return (free(desc), NULL);
 	rest = (char *)malloc((ft_strlen(desc) - i + 1) * sizeof(char));
 	if (!rest)
-		return (NULL);
+		return (free(desc), NULL);
 	if (ft_strchr(desc, '\n'))
 		ft_strcpy(rest, ft_strchr(desc, '\n') + 1);
 	return (free(desc), rest);
@@ -68,7 +75,7 @@ char	*ft_line(char *l)
 	char	*s;
 
 	i = 0;
-	s = NULL; 
+	s = NULL;
 	if (!l[i])
 		return (NULL);
 	while (l[i] && l[i] != '\n')
@@ -94,7 +101,7 @@ char	*get_next_line(int fd)
 	char		*str;
 
 	str = NULL;
-	if ((fd < 0) || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if ((fd < 0) || (BUFFER_SIZE <= 0))
 		return (NULL);
 	line = ft_read(fd, line);
 	if (!line)
