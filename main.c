@@ -19,9 +19,9 @@ int	main(void)
 	int		fd;
 	int		i;
 
-	fd = open("read_error.txt", O_RDONLY);
+	fd = open("1.txt", O_RDONLY);
 	i = 0;
-	while (i++ < 10)
+	while (i++ < 2000)
 	{
 		temp = NULL;
 		temp = get_next_line(fd);

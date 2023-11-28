@@ -11,62 +11,65 @@
 /* ************************************************************************** */
 #include "get_next_line.h"
 
-char	*ft_temp(char *str, char *buf)
+char	*ft_temp(char **str, char **buf)
 {
 	char	*temp;
 
-	temp = NULL;
-	temp = ft_strjoin(str, buf);
+	temp = ft_strjoin(*str, *buf);
+	free(*str);
+	*str = NULL;
+	free(*buf);
+	*buf = NULL;
 	if (!temp)
-		return (free(str), NULL);
-	free(str);
-	str = temp;
-	return (str);
+		return (NULL);
+	return (temp);
 }
 
-char	*ft_read(int fd, char *str)
+char	*ft_read(int fd, char **str)
 {
 	ssize_t	nbyte;
 	char	*buf;
 
 	buf = NULL;
 	nbyte = 1;
-	if (!str)
+	if (!*str)
 	{
-		str = (char *)malloc(1 * 1);
-		*str = 0;
+		*str = (char *)malloc(1 * 1);
+		if (!*str)
+			return (NULL);
+		**str = 0;
 	}
-	buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buf)
-		return (free(str), NULL);
-	while (nbyte > 0 && !ft_strchr(str, '\n'))
+	while (nbyte > 0 && !ft_strchr(*str, '\n'))
 	{
+		buf = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+		if (!buf)
+			return (free(*str), *str = NULL, NULL);
 		nbyte = read(fd, buf, BUFFER_SIZE);
 		if (nbyte == -1)
-			return (free(buf), free(str), NULL);
+			return (free(buf), free(*str), *str = NULL, NULL);
 		buf[nbyte] = '\0';
-		str = ft_temp(str, buf);
+		*str = ft_temp(str, &buf);
 	}
-	return (free(buf), str);
+	return (*str);
 }
 
-char	*ft_rests(char *desc)
+char	*ft_rests(char **desc)
 {
 	char	*rest;
 	size_t	i;
 
 	rest = NULL;
 	i = 0;
-	while (desc[i] && desc[i] != '\n')
+	while ((*desc)[i] && (*desc)[i] != '\n')
 		i++;
-	if (!desc[i])
-		return (free(desc), NULL);
-	rest = (char *)malloc((ft_strlen(desc) - i + 1) * sizeof(char));
+	if (!(*desc)[i])
+		return (free(*desc), *desc = NULL, NULL);
+	rest = (char *)malloc((ft_strlen(*desc) - i + 1) * sizeof(char));
 	if (!rest)
-		return (free(desc), NULL);
-	if (ft_strchr(desc, '\n'))
-		ft_strcpy(rest, ft_strchr(desc, '\n') + 1);
-	return (free(desc), rest);
+		return (free(*desc), *desc = NULL, NULL);
+	if (ft_strchr(*desc, '\n'))
+		ft_strcpy(rest, ft_strchr(*desc, '\n') + 1);
+	return (free(*desc), *desc = NULL, rest);
 }
 
 char	*ft_line(char *l)
@@ -80,7 +83,9 @@ char	*ft_line(char *l)
 		return (NULL);
 	while (l[i] && l[i] != '\n')
 		i++;
-	s = (char *)malloc((i + 2) * sizeof(char));
+	if (l[i] == '\n')
+		i++;
+	s = (char *)malloc((i + 1) * sizeof(char));
 	if (!s)
 		return (NULL);
 	i = 0;
@@ -103,10 +108,12 @@ char	*get_next_line(int fd)
 	str = NULL;
 	if ((fd < 0) || (BUFFER_SIZE <= 0))
 		return (NULL);
-	line = ft_read(fd, line);
+	line = ft_read(fd, &line);
 	if (!line)
 		return (NULL);
 	str = ft_line(line);
-	line = ft_rests(line);
+	if (!str)
+		return (free(line), line = NULL, str);
+	line = ft_rests(&line);
 	return (str);
 }
